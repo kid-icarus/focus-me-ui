@@ -1,0 +1,27 @@
+{
+  "name": "focus-me-ui",
+  "version": "1.0.0",
+  "main": "dist/electron.js",
+  "autor": "Ryan Kois <ryan.kois@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.14.37",
+    "@types/react": "^17.0.3",
+    "html-webpack-plugin": "^5.3.1",
+    "ts-loader": "^8.1.0",
+    "typescript": "^4.2.4",
+    "webpack": "^5.31.2",
+    "webpack-cli": "^4.6.0"
+  },
+  "dependencies": {
+    "@focus-me/focus-cli": "^1.0.13",
+    "electron": "^12.0.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "scripts": {
+    "start": "npm run build && electron dist/electron.js",
+    "electron": "electron dist/electron.js",
+    "build": "webpack"
+  }
+}
