@@ -36,18 +36,20 @@ const App: React.FC = () => {
         >
           <Box gridArea="sidebar" background="dark-3" >
             {[{name: 'General', path: '/general'}, {name: 'Plugins', path: '/plugins'}].map(({name, path}) => (
-              <Button key={name} hoverIndicator>
-                <Box pad={{ horizontal: 'medium', vertical: 'small' }}>
-                  <Link to={path}>{name}</Link>
-                </Box>
-              </Button>
+              <Box key={name} pad={{ horizontal: 'medium', vertical: 'small' }}>
+                <Link to={path}>{name}</Link>
+              </Box>
             ))}
           </Box>
           <Box gridArea="main" background="light-5" >
             <Main>
               <Switch>
-                <Route path="/general" exact><GeneralConfig duration={config.time} updateConfig={updateConfig} config={config}/></Route>
-                <Route path="/plugins" ><PluginConfig updateConfig={updateConfig} config={config}/></Route>
+                <Route path="/general" >
+                  <GeneralConfig updateConfig={updateConfig} config={config}/>
+                </Route>
+                <Route path="/plugins" >
+                  <PluginConfig updateConfig={updateConfig} config={config}/>
+                </Route>
               </Switch>
             </Main>
           </Box>

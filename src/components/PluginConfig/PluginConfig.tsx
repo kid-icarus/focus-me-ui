@@ -1,6 +1,7 @@
 import * as React from "react";
-import {useForm } from 'react-hook-form'
 import PluginList from "./PluginList";
+import {Route, useRouteMatch} from "react-router-dom";
+import PluginDetails from "./PluginDetails";
 
 interface GeneralConfigProps {
   updateConfig: (e: React.SyntheticEvent) => Promise<void>
@@ -8,16 +9,15 @@ interface GeneralConfigProps {
 }
 
 const PluginConfig: React.FC<GeneralConfigProps> = ({ updateConfig, config}) => {
-  const { register, handleSubmit, formState: { errors }} = useForm();
+  let { path } = useRouteMatch();
+
   return (
-    <main>
+    <div>
       <PluginList updateConfig={updateConfig} config={config}/>
-      <form onSubmit={handleSubmit(updateConfig)}>
-        <label htmlFor="time">Duration</label>
-        {errors.time && <p>Duration Required</p>}
-        <input {...register('time', {required: true})}/>
-      </form>
-    </main>
+      <Route path={`${path}/:pluginName`}>
+        <PluginDetails config={config}/>
+      </Route>
+    </div>
   )
 }
 
