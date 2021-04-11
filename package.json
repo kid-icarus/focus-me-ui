@@ -1,12 +1,12 @@
 {
   "name": "focus-me-ui",
   "version": "1.0.0",
-  "main": "dist/electron.js",
-  "autor": "Ryan Kois <ryan.kois@gmail.com>",
+  "author": "Ryan Kois <ryan.kois@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
+    "@types/react-router-dom": "^5.1.7",
     "html-webpack-plugin": "^5.3.1",
     "ts-loader": "^8.1.0",
     "typescript": "^4.2.4",
@@ -16,8 +16,13 @@
   "dependencies": {
     "@focus-me/focus-cli": "^1.0.13",
     "electron": "^12.0.2",
+    "grommet": "^2.17.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.0.5",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "styled-components": "^5.2.3"
   },
   "scripts": {
     "start": "npm run build && electron dist/electron.js",
