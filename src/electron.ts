@@ -1,8 +1,18 @@
 import {app, ipcMain, Menu, Tray, globalShortcut, BrowserWindow} from 'electron'
+import { Timer } from '@focus-me/focus-cli/dist/timer'
+import { loadPlugins } from '@focus-me/focus-cli/dist/util/load-plugins'
 import * as path from 'path'
+import {readFile} from "fs/promises";
+import {exec} from "child_process";
 
-ipcMain.handle('start-timer', () => {
-  console.log('yosup')
+const TIMERRC_PATH = path.join(process.env.HOME, '.timerrc.json')
+const readConfig = async (): Promise<FocusConfig> => JSON.parse(await readFile(TIMERRC_PATH, 'utf8')) as unknown as FocusConfig
+
+let timer
+let childProc
+
+app.on('will-quit', () => {
+  if (childProc) childProc.kill('SIGINT')
 })
 
 function createWindow () {
@@ -15,6 +25,22 @@ function createWindow () {
   });
 
   win.loadFile('index.html');
+
+  // todo: clean this up on window destroy.
+  ipcMain.on('stop-timer', (e) => {
+    if (childProc) {
+      childProc.kill('SIGINT')
+      childProc = null
+    }
+    win.webContents.send('timer-stopped', {})
+  })
+
+  ipcMain.on('start-timer', async (e) => {
+    childProc = exec('focus', () => {
+      childProc = null
+      win.webContents.send('timer-stopped', {})
+    })
+  })
 }
 
 function createPreferencesWindow() {

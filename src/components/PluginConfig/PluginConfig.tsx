@@ -4,16 +4,16 @@ import {Route, useRouteMatch} from "react-router-dom";
 import PluginDetails from "./PluginDetails";
 
 interface GeneralConfigProps {
-  updateConfig: (e: React.SyntheticEvent) => Promise<void>
+  updatePluginConfig: (pluginName: string, Config) => Promise<void>
   config: FocusConfig
 }
 
-const PluginConfig: React.FC<GeneralConfigProps> = ({ updateConfig, config}) => {
+const PluginConfig: React.FC<GeneralConfigProps> = ({ updatePluginConfig, config}) => {
   let { path } = useRouteMatch();
 
   return (
     <div>
-      <PluginList updateConfig={updateConfig} config={config}/>
+      <PluginList updatePluginConfig={updatePluginConfig} config={config}/>
       <Route path={`${path}/:pluginName`}>
         <PluginDetails config={config}/>
       </Route>

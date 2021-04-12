@@ -16,7 +16,18 @@ const App: React.FC = () => {
   }, [])
 
   const updateConfig = useCallback(async (formValues) => {
-    await window.electron.writeConfig({...config, ...formValues})
+    const updatedConfig = {...config, ...formValues}
+    await window.electron.writeConfig(updatedConfig)
+    setConfig(updatedConfig)
+  }, [config])
+
+  const updatePluginConfig = useCallback(async (pluginName: string, formValues: Config) => {
+    const updatedConfig = {
+      ...config,
+      plugins: {...config.plugins, [pluginName]: {...config.plugins[pluginName], ...formValues}}
+    }
+    await window.electron.writeConfig(updatedConfig)
+    setConfig(updatedConfig)
   }, [config])
 
   if (!config) return <p>loading</p>
@@ -48,7 +59,7 @@ const App: React.FC = () => {
                   <GeneralConfig updateConfig={updateConfig} config={config}/>
                 </Route>
                 <Route path="/plugins" >
-                  <PluginConfig updateConfig={updateConfig} config={config}/>
+                  <PluginConfig updatePluginConfig={updatePluginConfig} config={config}/>
                 </Route>
               </Switch>
             </Main>

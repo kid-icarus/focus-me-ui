@@ -3,7 +3,8 @@ interface Window {
     readConfig: () => Promise<FocusConfig>
     writeConfig: (config: FocusConfig) => Promise<void>
     startTimer: () => void
-    hehe: string
+    stopTimer: () => void
+    receive: (x: string, y: () => void) => void,
   }
 }
 
