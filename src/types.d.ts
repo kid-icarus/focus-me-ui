@@ -4,7 +4,7 @@ interface Window {
     writeConfig: (config: FocusConfig) => Promise<void>
     startTimer: () => void
     stopTimer: () => void
-    receive: (x: string, y: () => void) => void,
+    receive: (x: string, y: (...x) => void) => void,
   }
 }
 

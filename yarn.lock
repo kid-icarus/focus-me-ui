@@ -156,10 +156,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==
 
-"@focus-me/focus-cli@^1.0.13":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@focus-me/focus-cli/-/focus-cli-1.0.13.tgz#33baa2057c80c6c81ed927f2057be3fb21b8b38d"
-  integrity sha512-KiRvdAUUI1lvS2ZnuNAXSXsjtCc7F0A+3WIM4tqL4oHCbMDtak/bOhFBSN03FFN3Yi3jj579Ua0fqzmxyobPKw==
+"@focus-me/focus-cli@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@focus-me/focus-cli/-/focus-cli-1.2.2.tgz#dd0374304735cfbd3d2c952e6fb48e221b0d909f"
+  integrity sha512-U4Lj0HiP3Tg48O8+blNDnGsRdLKmSlKItmSdiI8kxWkbXBq+xWQropa2x7w11c0vqWb23lCzerSH7nXHTHh92w==
   dependencies:
     "@types/node" "12"
     "@types/yargs" "^13.0.0"
