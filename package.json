@@ -25,8 +25,10 @@
     "styled-components": "^5.2.3"
   },
   "scripts": {
-    "start": "npm run build && electron dist/electron.js",
-    "electron": "electron dist/electron.js",
-    "build": "webpack"
+    "start": "electron dist/electron.js",
+    "build:renderer": "webpack",
+    "build:main": "tsc -P tsconfig.electron.json",
+    "watch:renderer": "webpack",
+    "watch:main": "tsc -w -P tsconfig.electron.json"
   }
 }

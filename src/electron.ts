@@ -2,8 +2,7 @@ import {app, ipcMain, Menu, Tray, globalShortcut, BrowserWindow} from 'electron'
 import { Timer } from '@focus-me/focus-cli/dist/timer'
 import { loadPlugins } from '@focus-me/focus-cli/dist/util/load-plugins'
 import * as path from 'path'
-import {readFile} from "fs/promises";
-import {exec} from "child_process";
+import {readFile} from 'fs/promises';
 
 const TIMERRC_PATH = path.join(process.env.HOME, '.timerrc.json')
 const readConfig = async (): Promise<FocusConfig> => JSON.parse(await readFile(TIMERRC_PATH, 'utf8')) as unknown as FocusConfig
@@ -12,10 +11,12 @@ let timer
 let childProc
 
 app.on('will-quit', () => {
-  if (childProc) childProc.kill('SIGINT')
+  timer?.stop();
 })
 
-function createWindow () {
+app.dock.setIcon(path.join(__dirname, '..', 'public', 'Enso.png'))
+
+async function createWindow () {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -24,23 +25,44 @@ function createWindow () {
     }
   });
 
-  win.loadFile('index.html');
+  const handleStopped = () => {
+    win.webContents.send('timer-stopped', {})
+    win.webContents.send('action', {
+      type: 'STOP',
+    })
+  }
+
+  const handleTick = (until: number) => {
+    console.log(until)
+    win.webContents.send('action', {
+      type: 'TICK',
+      payload: {
+        until
+      }
+    })
+  }
 
   // todo: clean this up on window destroy.
   ipcMain.on('stop-timer', (e) => {
-    if (childProc) {
-      childProc.kill('SIGINT')
-      childProc = null
-    }
-    win.webContents.send('timer-stopped', {})
+    timer.stop()
   })
 
   ipcMain.on('start-timer', async (e) => {
-    childProc = exec('focus', () => {
-      childProc = null
-      win.webContents.send('timer-stopped', {})
-    })
+    const config = await readConfig()
+    const plugins = loadPlugins(config)
+    timer = new Timer(config, plugins)
+    timer.on('stopped', handleStopped)
+    timer.on('tick', handleTick)
+    timer.start()
   })
+
+  ipcMain.on('toggle', async (e) => {
+    if (!childProc) return ipcMain.emit('start-timer')
+
+    ipcMain.emit('stop-timer')
+  })
+
+  win.loadFile('index.html');
 }
 
 function createPreferencesWindow() {
@@ -61,10 +83,14 @@ app.on('ready', () => {
   tray = new Tray(path.join(__dirname, '..', 'public', 'GroupTemplate.png'))
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Help...' },
-    { label: 'Preferences...', click: () => {createPreferencesWindow()}},
+    { label: 'Preferences...',
+      accelerator: 'CommandOrControl+,',
+      registerAccelerator: true,
+      click: createPreferencesWindow
+    },
   ])
   tray.setToolTip('Focus')
   tray.setContextMenu(contextMenu)
-  globalShortcut.register('Command+,', createPreferencesWindow)
+  globalShortcut.register('Command+Shift+,', () => ipcMain.emit('toggle'))
   createWindow()
 });
