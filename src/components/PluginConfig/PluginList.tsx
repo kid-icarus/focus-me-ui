@@ -22,7 +22,7 @@ const PluginList: React.FC<GeneralConfigProps> = ({ updatePluginConfig, config})
   `
 
   return (
-    <Box background="dark-3">
+    <Box gridArea="subnav" background="dark-3">
       {Object.entries(plugins).map(([name, plugin]) => (
         <PluginItem key={name}>
           <CheckBox label={<Link to={`${url}/${name}`}>{name}</Link>} checked={plugin.enabled} onChange={setPluginEnabled(name)} />

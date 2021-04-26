@@ -37,12 +37,12 @@ const App: React.FC = () => {
       <HashRouter>
         <Grid
           fill
-          rows={['auto', 'flex']}
           columns={['auto', 'flex']}
+          rows={['auto', 'flex']}
           gap="small"
           areas={[
-            { name: 'sidebar', start: [0, 1], end: [0, 1] },
-            { name: 'main', start: [1, 1], end: [1, 1] },
+            { name: 'sidebar', start: [0, 0], end: [0, 0] },
+            { name: 'main', start: [1, 0], end: [1, 0] },
           ]}
         >
           <Box gridArea="sidebar" background="dark-3" >
@@ -52,7 +52,7 @@ const App: React.FC = () => {
               </Box>
             ))}
           </Box>
-          <Box gridArea="main" background="light-5" >
+          <Box gridArea="main" background="light-5">
             <Main>
               <Switch>
                 <Route path="/general" >
