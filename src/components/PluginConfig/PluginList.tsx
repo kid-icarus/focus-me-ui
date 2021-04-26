@@ -2,6 +2,7 @@ import * as React from "react";
 import {Box, CheckBox} from "grommet";
 import {Link, useRouteMatch} from "react-router-dom";
 import {ChangeEvent, useCallback} from "react";
+import styled from 'styled-components'
 
 interface GeneralConfigProps {
   updatePluginConfig: (pluginName: string, Config) => Promise<void>
@@ -16,13 +17,16 @@ const PluginList: React.FC<GeneralConfigProps> = ({ updatePluginConfig, config})
     updatePluginConfig(pluginName, {enabled: e.target.checked})
   }, [plugins])
 
+  const PluginItem = styled.div`
+    margin: 8px;
+  `
+
   return (
     <Box background="dark-3">
       {Object.entries(plugins).map(([name, plugin]) => (
-        <Box key={name}>
-          <CheckBox checked={plugin.enabled} onChange={setPluginEnabled(name)}/>
-          <Link to={`${url}/${name}`}>{name}</Link>
-        </Box>
+        <PluginItem key={name}>
+          <CheckBox label={<Link to={`${url}/${name}`}>{name}</Link>} checked={plugin.enabled} onChange={setPluginEnabled(name)} />
+        </PluginItem>
       ))}
     </Box>
   )
