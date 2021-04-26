@@ -3,6 +3,7 @@ import {render} from 'react-dom'
 import {useEffect, useState} from "react";
 import {Box, Button, Clock, Grommet, Meter} from "grommet";
 import {PlayFill, StopFill} from "grommet-icons";
+import styled from 'styled-components'
 
 const App = () => {
   const [started, setStarted] = useState(false)
@@ -66,18 +67,25 @@ const App = () => {
     window.electron.startTimer()
   }, [started])
 
+  const Controls = styled.div`
+    position: absolute;
+  `
+
   return (
       <Box align="center" justify="center" height="full">
         <Grommet themeMode="dark">
           <Box align="center" justify="center">
             <Meter type="circle" value={remaining}></Meter>
-            <Clock size="xxlarge" type="digital" time={endingAt.current || 'T00:00:00'} run={(endingAt.current && started) ? 'backward' : false}></Clock>
-          </Box>
-          <Box align="center" justify="center">
-            <Button
-              onClick={onClick}
-              icon={started ? <StopFill /> : <PlayFill/> }
-            >{started ? 'Stop' : 'Start'}</Button>
+            <Controls align="center" justify="center">
+              <Clock size="xxlarge" type="digital" time={endingAt.current || 'T00:00:00'} run={(endingAt.current && started) ? 'backward' : false}></Clock>
+              <Box align="center" justify="center" margin="medium">
+                <Button
+                  plain
+                  onClick={onClick}
+                  icon={started ? <StopFill /> : <PlayFill/> }
+                />
+              </Box>
+            </Controls>
           </Box>
         </Grommet>
       </Box>
