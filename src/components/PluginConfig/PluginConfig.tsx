@@ -25,7 +25,7 @@ const PluginConfig: React.FC<GeneralConfigProps> = ({ updatePluginConfig, config
     >
       <PluginList updatePluginConfig={updatePluginConfig} config={config}/>
       <Route path={`${path}/:pluginName`}>
-        <PluginDetails config={config}/>
+        <PluginDetails config={config} updatePluginConfig={updatePluginConfig}/>
       </Route>
     </Grid>
   )
