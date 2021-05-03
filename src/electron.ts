@@ -38,9 +38,12 @@ async function createWindow () {
     })
   }
 
-  const handleStarted = () => {
+  const handleStarted = (until: number) => {
     win.webContents.send('action', {
       type: 'START',
+      payload: {
+        until
+      }
     })
   }
 
@@ -81,7 +84,7 @@ async function createWindow () {
     // Handle actual timer events. The timer is the source of truth.
     timer.on('stopped', handleStopped)
     timer.on('tick', handleTick)
-    timer.on('starting', handleStarted)
+    timer.on('started', handleStarted)
 
     if (timerState === 'STOPPED') await timer.start()
   })

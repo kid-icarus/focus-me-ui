@@ -5,44 +5,45 @@ import {Box, Button, Clock, Grommet, Meter} from "grommet";
 import {PlayFill, StopFill} from "grommet-icons";
 import styled from 'styled-components'
 
+const Controls = styled.div`
+    position: absolute;
+  `
+
 const App = () => {
   const [started, setStarted] = useState(false)
-  const [until, setUntil] = useState<number>(0)
+  const [until, setUntil] = useState<number>(0) // This is updated every sec
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark')
-  const endingDuration = useRef(0)
-  const endingAt = useRef('')
-  const remaining = endingDuration.current ? 100 - Math.floor(until / endingDuration.current * 100)  : 0
-  console.log('remaining', remaining, until, 'until', endingDuration.current, 'endingDuration')
+  const [duration, setDuration] = useState(0) // This should be updated once
+  const remaining = duration ? until ? 100 - Math.floor(until / duration * 100) : 0 : 0
+  const endingAt = React.useRef('')
 
   useEffect(() => {
     window.electron.receive('action', (action) => {
       switch (action.type) {
         case 'STOP': {
+          endingAt.current = ''
           setStarted(false)
           setUntil(0)
-          endingAt.current = null
-          endingDuration.current = 0
+          setDuration(0)
           break
         }
 
         case 'TICK': {
-          if (!endingAt.current) {
-            endingDuration.current = action.payload.until
-
-            const mins = Math.floor(action.payload.until / 60)
-              .toString()
-              .padStart(2, '0');
-
-            const secs = (action.payload.until % 60).toString().padStart(2, '0');
-
-            endingAt.current = `T00:${mins}:${secs}`;
-          }
           setUntil(action.payload.until)
           break
         }
 
         case 'START': {
+          const mins = Math.floor(action.payload.until / 60)
+            .toString()
+            .padStart(2, '0');
+
+          const secs = (action.payload.until % 60).toString().padStart(2, '0');
+          endingAt.current = `T00:${mins}:${secs}`;
+
           setStarted(true)
+          setDuration(action.payload.until)
+
           break
         }
 
@@ -67,17 +68,18 @@ const App = () => {
     window.electron.startTimer()
   }, [started])
 
-  const Controls = styled.div`
-    position: absolute;
-  `
-
   return (
       <Box align="center" justify="center" height="full">
         <Grommet themeMode="dark">
           <Box align="center" justify="center">
             <Meter type="circle" value={remaining}></Meter>
             <Controls align="center" justify="center">
-              <Clock size="xxlarge" type="digital" time={endingAt.current || 'T00:00:00'} run={(endingAt.current && started) ? 'backward' : false}></Clock>
+              <Clock
+                size="xxlarge"
+                type="digital"
+                time={endingAt.current || 'T00:00:00'}
+                run={(endingAt.current && started) ? 'backward' : false}
+              />
               <Box align="center" justify="center" margin="medium">
                 <Button
                   plain
