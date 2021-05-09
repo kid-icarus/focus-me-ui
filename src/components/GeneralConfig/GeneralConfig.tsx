@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
+import { FormField, TextInput } from 'grommet'
 
 interface GeneralConfigProps {
   updateConfig: (formValues: Partial<FocusConfig>) => Promise<void>
@@ -18,12 +19,13 @@ const GeneralConfig: React.FC<GeneralConfigProps> = ({
   return (
     <main>
       <form onSubmit={handleSubmit(updateConfig)}>
-        <label htmlFor="time">Duration</label>
-        {errors.time && <p>Duration Required</p>}
-        <input
-          {...register('time', { required: true })}
-          defaultValue={config.time}
-        />
+        <FormField label="Duration" error={errors.time && 'Duration Required'}>
+          <TextInput
+            {...register('time', { required: true })}
+            defaultValue={config.time}
+            type={'number'}
+          />
+        </FormField>
         <input type="submit" />
       </form>
     </main>
