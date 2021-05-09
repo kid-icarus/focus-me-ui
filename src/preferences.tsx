@@ -1,8 +1,23 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Switch, Link, Route, HashRouter } from 'react-router-dom'
+import { Switch, Link, Route, HashRouter, LinkProps } from 'react-router-dom'
 import { render } from 'react-dom'
 import { GeneralConfig, PluginConfig } from './components'
-import { Grommet, Main, Box, Grid } from 'grommet'
+import { Grommet, Main, Box, Grid, Nav, Anchor, AnchorProps } from 'grommet'
+import { Action, SettingsOption } from 'grommet-icons'
+
+export type AnchorLinkProps = LinkProps &
+  AnchorProps &
+  Omit<JSX.IntrinsicElements['a'], 'color'>
+
+export const AnchorLink: React.FC<AnchorLinkProps> = (props) => {
+  return (
+    <Anchor
+      /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+      as={({ colorProp, hasIcon, hasLabel, focus, ...p }) => <Link {...p} />}
+      {...props}
+    />
+  )
+}
 
 const App: React.FC = () => {
   const [config, setConfig] = useState<FocusConfig>(null)
@@ -49,22 +64,12 @@ const App: React.FC = () => {
           columns={['auto', 'flex']}
           rows={['auto', 'flex']}
           gap="small"
-          areas={[
-            { name: 'sidebar', start: [0, 0], end: [0, 0] },
-            { name: 'main', start: [1, 0], end: [1, 0] },
-          ]}
         >
-          <Box gridArea="sidebar" background="dark-3">
-            {[
-              { name: 'General', path: '/general' },
-              { name: 'Plugins', path: '/plugins' },
-            ].map(({ name, path }) => (
-              <Box key={name} pad={{ horizontal: 'medium', vertical: 'small' }}>
-                <Link to={path}>{name}</Link>
-              </Box>
-            ))}
-          </Box>
-          <Box gridArea="main" background="light-5">
+          <Nav background="brand">
+            <AnchorLink icon={<SettingsOption />} to="/general"></AnchorLink>
+            <AnchorLink icon={<Action />} to="/plugins"></AnchorLink>
+          </Nav>
+          <Box background="light-5">
             <Main>
               <Switch>
                 <Route path="/general">
