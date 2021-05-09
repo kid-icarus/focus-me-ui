@@ -1,36 +1,47 @@
-import {app, ipcMain, Menu, Tray, globalShortcut, BrowserWindow, nativeTheme} from 'electron'
+import {
+  app,
+  ipcMain,
+  Menu,
+  Tray,
+  globalShortcut,
+  BrowserWindow,
+  nativeTheme,
+} from 'electron'
 import { Timer } from '@focus-me/focus-cli/dist/timer'
 import { loadPlugins } from '@focus-me/focus-cli/dist/util/load-plugins'
 import * as path from 'path'
-import {readFile} from 'fs/promises';
+import { readFile } from 'fs/promises'
 
 const TIMERRC_PATH = path.join(process.env.HOME, '.timerrc.json')
-const readConfig = async (): Promise<FocusConfig> => JSON.parse(await readFile(TIMERRC_PATH, 'utf8')) as unknown as FocusConfig
+const readConfig = async (): Promise<FocusConfig> =>
+  (JSON.parse(await readFile(TIMERRC_PATH, 'utf8')) as unknown) as FocusConfig
 
 let timer: Timer
-(async () => {
-  const config = await readConfig()
-  const plugins = loadPlugins(config)
-  timer = new Timer(config, plugins)
+;(async () => {
+  try {
+    const config = await readConfig()
+    const plugins = loadPlugins(config)
+    timer = new Timer(config, plugins)
+  } catch (e) {}
 })()
 
 nativeTheme.themeSource = 'system'
 
 app.on('will-quit', async () => {
   const state = timer.getState()
-  if (state === 'STARTED') await timer.stop(false);
+  if (state === 'STARTED') await timer.stop(false)
 })
 
 app.dock.setIcon(path.join(__dirname, '..', 'public', 'Enso.png'))
 
-async function createWindow () {
+async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(app.getAppPath(), 'preload.js')
-    }
-  });
+      preload: path.join(app.getAppPath(), 'preload.js'),
+    },
+  })
 
   const handleStopping = () => {
     win.webContents.send('action', {
@@ -48,8 +59,8 @@ async function createWindow () {
     win.webContents.send('action', {
       type: 'START',
       payload: {
-        until
-      }
+        until,
+      },
     })
   }
 
@@ -57,8 +68,8 @@ async function createWindow () {
     win.webContents.send('action', {
       type: 'TICK',
       payload: {
-        until
-      }
+        until,
+      },
     })
   }
 
@@ -74,7 +85,6 @@ async function createWindow () {
   ipcMain.handle('dark-mode:system', () => {
     nativeTheme.themeSource = 'system'
   })
-
 
   // todo: clean this up on window destroy.
   ipcMain.on('stop-timer', () => {
@@ -104,7 +114,7 @@ async function createWindow () {
     ipcMain.emit('stop-timer')
   })
 
-  await win.loadFile('index.html');
+  await win.loadFile('index.html')
 }
 
 async function createPreferencesWindow() {
@@ -112,11 +122,11 @@ async function createPreferencesWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(app.getAppPath(), 'preload.js')
-    }
-  });
+      preload: path.join(app.getAppPath(), 'preload.js'),
+    },
+  })
 
-  await win.loadFile('preferences.html');
+  await win.loadFile('preferences.html')
 }
 
 let tray
@@ -135,19 +145,20 @@ app.on('ready', async () => {
     { role: 'toggleDevTools' },
     { role: 'unhide' },
     { type: 'separator' },
-    { label: 'Preferences...',
+    {
+      label: 'Preferences...',
       accelerator: 'CommandOrControl+,',
       registerAccelerator: true,
-      click: createPreferencesWindow
+      click: createPreferencesWindow,
     },
     { role: 'quit' },
   ])
   const appMenu = Menu.buildFromTemplate([
-    {label: app.getName(), submenu: menu}
+    { label: app.getName(), submenu: menu },
   ])
-  Menu.setApplicationMenu(appMenu);
+  Menu.setApplicationMenu(appMenu)
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Toggle Time', accelerator: 'Command+Shift+,'},
+    { label: 'Toggle Time', accelerator: 'Command+Shift+,' },
   ])
   tray = new Tray(path.join(__dirname, '..', 'public', 'GroupTemplate.png'))
   tray.setToolTip(app.getName())
@@ -155,4 +166,4 @@ app.on('ready', async () => {
   globalShortcut.register('Command+Shift+,', () => ipcMain.emit('toggle'))
 
   await createWindow()
-});
+})

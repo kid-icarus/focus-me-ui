@@ -1,16 +1,19 @@
-import * as React from "react";
-import PluginList from "./PluginList";
-import {Route, useRouteMatch} from "react-router-dom";
-import PluginDetails from "./PluginDetails";
-import {Grid} from "grommet";
+import * as React from 'react'
+import PluginList from './PluginList'
+import { Route, useRouteMatch } from 'react-router-dom'
+import PluginDetails from './PluginDetails'
+import { Grid } from 'grommet'
 
 interface GeneralConfigProps {
   updatePluginConfig: (pluginName: string, Config) => Promise<void>
   config: FocusConfig
 }
 
-const PluginConfig: React.FC<GeneralConfigProps> = ({ updatePluginConfig, config}) => {
-  let { path } = useRouteMatch();
+const PluginConfig: React.FC<GeneralConfigProps> = ({
+  updatePluginConfig,
+  config,
+}) => {
+  const { path } = useRouteMatch()
 
   return (
     <Grid
@@ -23,9 +26,12 @@ const PluginConfig: React.FC<GeneralConfigProps> = ({ updatePluginConfig, config
         { name: 'content', start: [1, 0], end: [1, 0] },
       ]}
     >
-      <PluginList updatePluginConfig={updatePluginConfig} config={config}/>
+      <PluginList updatePluginConfig={updatePluginConfig} config={config} />
       <Route path={`${path}/:pluginName`}>
-        <PluginDetails config={config} updatePluginConfig={updatePluginConfig}/>
+        <PluginDetails
+          config={config}
+          updatePluginConfig={updatePluginConfig}
+        />
       </Route>
     </Grid>
   )

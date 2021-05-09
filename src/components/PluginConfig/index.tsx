@@ -1,1 +1,1 @@
-export {default as PluginConfig} from './PluginConfig'
+export { default as PluginConfig } from './PluginConfig'
