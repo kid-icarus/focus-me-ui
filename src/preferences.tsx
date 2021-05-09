@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { Switch, Link, Route, HashRouter } from 'react-router-dom'
 import { render } from 'react-dom'
 import { GeneralConfig, PluginConfig } from './components'
-import { Grommet, Main, Box, Grid, Button, Text } from 'grommet'
+import { Grommet, Main, Box, Grid } from 'grommet'
 
 const App: React.FC = () => {
   const [config, setConfig] = useState<FocusConfig>(null)
@@ -12,12 +12,12 @@ const App: React.FC = () => {
       const cfg = await window.electron.readConfig()
       setConfig(cfg)
     }
-    fetchConfig()
+    fetchConfig().catch((e) => console.error(e))
   }, [])
 
   const updateConfig = useCallback(
-    async (formValues) => {
-      const updatedConfig = { ...config, ...formValues }
+    async (formValues: Partial<FocusConfig>) => {
+      const updatedConfig: FocusConfig = { ...config, ...formValues }
       await window.electron.writeConfig(updatedConfig)
       setConfig(updatedConfig)
     },

@@ -6,10 +6,10 @@ const Rain: React.FC<PluginProps> = ({ config, updatePluginConfig }) => {
   const pluginConfig = config.plugins.rain
   const [value, setValue] = useState<number>(Number(pluginConfig.volume))
 
-  const onChange = (event) => {
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const volume = parseFloat(event.target.value)
     setValue(volume)
-    updatePluginConfig('rain', { volume })
+    updatePluginConfig('rain', { volume }).catch((e) => console.error(e))
   }
 
   return (

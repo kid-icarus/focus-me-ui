@@ -9,6 +9,10 @@ interface GeneralConfigProps {
   config: FocusConfig
 }
 
+const PluginItem = styled.div`
+  margin: 8px;
+`
+
 const PluginList: React.FC<GeneralConfigProps> = ({
   updatePluginConfig,
   config,
@@ -18,14 +22,12 @@ const PluginList: React.FC<GeneralConfigProps> = ({
 
   const setPluginEnabled = useCallback(
     (pluginName) => (e: ChangeEvent<HTMLInputElement>) => {
-      updatePluginConfig(pluginName, { enabled: e.target.checked })
+      updatePluginConfig(pluginName, { enabled: e.target.checked }).catch((e) =>
+        console.error(e)
+      )
     },
     [plugins]
   )
-
-  const PluginItem = styled.div`
-    margin: 8px;
-  `
 
   return (
     <Box gridArea="subnav" background="dark-3">

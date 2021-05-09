@@ -17,7 +17,7 @@ contextBridge.exposeInMainWorld('electron', {
   readConfig,
   writeConfig: async (config: FocusConfig): Promise<void> =>
     await writeFile(TIMERRC_PATH, JSON.stringify(config, null, 2)),
-  receive: (channel, func: (...x: any) => void) => {
+  receive: (channel, func: (...x: unknown[]) => void) => {
     const validChannels = ['fromMain', 'timer-stopped', 'action']
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`

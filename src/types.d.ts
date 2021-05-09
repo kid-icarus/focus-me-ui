@@ -17,3 +17,10 @@ interface FocusConfig {
   time: number
   plugins: Record<string, Config>
 }
+
+type TimerActionType = 'START' | 'STOPPING' | 'STOPPED' | 'TICK'
+
+interface TimerAction {
+  type: TimerActionType
+  payload: Record<string, any>
+}

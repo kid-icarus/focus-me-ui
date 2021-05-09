@@ -3,5 +3,5 @@ export { Bell } from './Bell'
 
 export interface PluginProps {
   config: FocusConfig
-  updatePluginConfig
+  updatePluginConfig: (pluginName: string, Config) => Promise<void>
 }

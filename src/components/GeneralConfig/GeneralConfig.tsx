@@ -2,8 +2,8 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 
 interface GeneralConfigProps {
-  updateConfig: (e: React.SyntheticEvent) => Promise<void>
-  config: any
+  updateConfig: (formValues: Partial<FocusConfig>) => Promise<void>
+  config: FocusConfig
 }
 
 const GeneralConfig: React.FC<GeneralConfigProps> = ({

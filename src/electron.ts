@@ -17,19 +17,21 @@ const readConfig = async (): Promise<FocusConfig> =>
   (JSON.parse(await readFile(TIMERRC_PATH, 'utf8')) as unknown) as FocusConfig
 
 let timer: Timer
-;(async () => {
+void (async (): Promise<void> => {
   try {
     const config = await readConfig()
     const plugins = loadPlugins(config)
     timer = new Timer(config, plugins)
-  } catch (e) {}
+  } catch (e) {
+    console.error(e)
+  }
 })()
 
 nativeTheme.themeSource = 'system'
 
-app.on('will-quit', async () => {
+app.on('will-quit', () => {
   const state = timer.getState()
-  if (state === 'STARTED') await timer.stop(false)
+  if (state === 'STARTED') timer.stop(false).catch((e) => console.error(e))
 })
 
 app.dock.setIcon(path.join(__dirname, '..', 'public', 'Enso.png'))
@@ -88,11 +90,15 @@ async function createWindow() {
 
   // todo: clean this up on window destroy.
   ipcMain.on('stop-timer', () => {
-    timer.stop(false)
+    timer.stop(false).catch((e) => console.error(e))
   })
 
-  ipcMain.on('start-timer', async () => {
-    const config = await readConfig()
+  ipcMain.on('start-timer', () => {
+    let config
+    readConfig()
+      .then((c) => (config = c))
+      .catch((e) => console.error(e))
+
     const plugins = loadPlugins(config)
     const timerState = timer.getState()
     timer = new Timer(config, plugins)
@@ -103,10 +109,10 @@ async function createWindow() {
     timer.on('tick', handleTick)
     timer.on('started', handleStarted)
 
-    if (timerState === 'STOPPED') await timer.start()
+    if (timerState === 'STOPPED') timer.start().catch((e) => console.error(e))
   })
 
-  ipcMain.on('toggle', async () => {
+  ipcMain.on('toggle', () => {
     const timerState = timer.getState()
 
     if (timerState === 'STOPPED') return ipcMain.emit('start-timer')
@@ -129,9 +135,9 @@ async function createPreferencesWindow() {
   await win.loadFile('preferences.html')
 }
 
-let tray
+let tray: Tray
 
-app.on('ready', async () => {
+app.on('ready', () => {
   // Create our menu entries so that we can use MAC shortcuts
   const menu = Menu.buildFromTemplate([
     { role: 'about' },
@@ -165,5 +171,5 @@ app.on('ready', async () => {
   tray.setContextMenu(contextMenu)
   globalShortcut.register('Command+Shift+,', () => ipcMain.emit('toggle'))
 
-  await createWindow()
+  createWindow().catch((e) => console.error(e))
 })

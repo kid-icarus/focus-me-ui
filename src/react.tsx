@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback } from 'react'
 import { render } from 'react-dom'
 import { useEffect, useState } from 'react'
 import { Box, Button, Clock, Grommet, Meter } from 'grommet'
@@ -23,7 +23,7 @@ const App = () => {
   const endingAt = React.useRef('')
 
   useEffect(() => {
-    window.electron.receive('action', (action) => {
+    window.electron.receive('action', (action: TimerAction) => {
       switch (action.type) {
         case 'STOPPING': {
           endingAt.current = ''
@@ -57,10 +57,6 @@ const App = () => {
 
           break
         }
-
-        default: {
-          console.error(`dispatching ${action.type} not found`)
-        }
       }
     })
   }, [])
@@ -83,10 +79,10 @@ const App = () => {
 
   return (
     <Box align="center" justify="center" height="full">
-      <Grommet themeMode="dark">
+      <Grommet themeMode={themeMode}>
         <Box align="center" justify="center">
           <Meter type="circle" value={remaining}></Meter>
-          <Controls align="center" justify="center">
+          <Controls>
             <Clock
               size="xxlarge"
               type="digital"
