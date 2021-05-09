@@ -11,6 +11,7 @@ const Controls = styled.div`
 
 const App = () => {
   const [started, setStarted] = useState(false)
+  const [stopped, setStopped] = useState(true)
   const [until, setUntil] = useState<number>(0) // This is updated every sec
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark')
   const [duration, setDuration] = useState(0) // This should be updated once
@@ -20,11 +21,17 @@ const App = () => {
   useEffect(() => {
     window.electron.receive('action', (action) => {
       switch (action.type) {
-        case 'STOP': {
+        case 'STOPPING': {
           endingAt.current = ''
           setStarted(false)
+          setStopped(false)
           setUntil(0)
           setDuration(0)
+          break
+        }
+
+        case 'STOPPED': {
+          setStopped(true)
           break
         }
 
@@ -82,6 +89,7 @@ const App = () => {
               />
               <Box align="center" justify="center" margin="medium">
                 <Button
+                  disabled={!started && !stopped}
                   plain
                   onClick={onClick}
                   icon={started ? <StopFill /> : <PlayFill/> }

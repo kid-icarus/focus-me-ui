@@ -32,9 +32,15 @@ async function createWindow () {
     }
   });
 
+  const handleStopping = () => {
+    win.webContents.send('action', {
+      type: 'STOPPING',
+    })
+  }
+
   const handleStopped = () => {
     win.webContents.send('action', {
-      type: 'STOP',
+      type: 'STOPPED',
     })
   }
 
@@ -82,6 +88,7 @@ async function createWindow () {
     timer = new Timer(config, plugins)
 
     // Handle actual timer events. The timer is the source of truth.
+    timer.on('stopping', handleStopping)
     timer.on('stopped', handleStopped)
     timer.on('tick', handleTick)
     timer.on('started', handleStarted)

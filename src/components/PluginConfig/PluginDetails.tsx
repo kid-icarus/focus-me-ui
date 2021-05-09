@@ -1,15 +1,16 @@
 import React from 'react'
 import {useParams} from "react-router";
 import {Box} from 'grommet'
-import {PluginProps, Rain} from '../Plugins'
+import {PluginProps, Rain, Bell} from '../Plugins'
 
 interface RouteParams {
   pluginName: string
 }
 
-const pluginDetailsMap = new Map<string, React.FC<PluginProps>>([[
-  'rain', ({config, updatePluginConfig}) => <Rain config={config} updatePluginConfig={updatePluginConfig}/>
-]])
+const pluginDetailsMap = new Map<string, React.FC<PluginProps>>([
+  ['rain', ({config, updatePluginConfig}) => <Rain config={config} updatePluginConfig={updatePluginConfig}/>,],
+  ['bell', ({config, updatePluginConfig}) => <Bell config={config} updatePluginConfig={updatePluginConfig}/>,],
+])
 
 const PluginDetails: React.FC<PluginProps> = ({config, updatePluginConfig}) => {
   const {pluginName} = useParams<RouteParams>()

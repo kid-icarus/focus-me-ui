@@ -2,9 +2,9 @@ import React, {useState} from 'react'
 import {FormField, RangeInput} from "grommet";
 import {PluginProps} from "../index";
 
-const Rain: React.FC<PluginProps> = ({config, updatePluginConfig}) => {
-  const pluginConfig = config.plugins.rain
-  const [value, setValue] = useState<number>(Number(pluginConfig.volume))
+const Bell: React.FC<PluginProps> = ({config, updatePluginConfig}) => {
+  const pluginConfig = config.plugins.bell
+  const [value, setValue] = useState<number>(Number(pluginConfig.volume ?? 0))
 
   const onChange = (event) => {
     const volume = parseFloat(event.target.value)
@@ -24,4 +24,4 @@ const Rain: React.FC<PluginProps> = ({config, updatePluginConfig}) => {
   </FormField>)
 }
 
-export default Rain
+export default Bell
