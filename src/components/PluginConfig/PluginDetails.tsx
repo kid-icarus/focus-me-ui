@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router'
 import { Box } from 'grommet'
-import { PluginProps, Rain, Bell } from '../Plugins'
+import { PluginProps, Rain, Bell, ApplicationManager } from '../Plugins'
 
 interface RouteParams {
   pluginName: string
@@ -18,6 +18,15 @@ const pluginDetailsMap = new Map<string, React.FC<PluginProps>>([
     'bell',
     ({ config, updatePluginConfig }) => (
       <Bell config={config} updatePluginConfig={updatePluginConfig} />
+    ),
+  ],
+  [
+    'application-manager',
+    ({ config, updatePluginConfig }) => (
+      <ApplicationManager
+        config={config}
+        updatePluginConfig={updatePluginConfig}
+      />
     ),
   ],
 ])

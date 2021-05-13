@@ -10,12 +10,34 @@ interface Window {
 
 interface Config {
   enabled: boolean
-  [key: string]: any
+}
+
+interface ApplicationOpen {
+  name: string
+  bounds?: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+}
+
+interface ApplicationManagerConfig extends Config {
+  close: string[]
+  open: ApplicationOpen[]
 }
 
 interface FocusConfig {
   time: number
-  plugins: Record<string, Config>
+  plugins: {
+    'application-manager': ApplicationManagerConfig
+    bell: Config & {
+      volume: number
+    }
+    rain: Config & {
+      volume: number
+    }
+  }
 }
 
 type TimerActionType = 'START' | 'STOPPING' | 'STOPPED' | 'TICK'
