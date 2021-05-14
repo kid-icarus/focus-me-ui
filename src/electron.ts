@@ -94,22 +94,22 @@ async function createWindow() {
   })
 
   ipcMain.on('start-timer', () => {
-    let config
     readConfig()
-      .then((c) => (config = c))
+      .then((config) => {
+        const plugins = loadPlugins(config)
+        const timerState = timer.getState()
+        timer = new Timer(config, plugins)
+        timer.on('stopping', handleStopping)
+        timer.on('stopped', handleStopped)
+        timer.on('tick', handleTick)
+        timer.on('started', handleStarted)
+
+        if (timerState === 'STOPPED')
+          timer.start().catch((e) => console.error(e))
+      })
       .catch((e) => console.error(e))
 
-    const plugins = loadPlugins(config)
-    const timerState = timer.getState()
-    timer = new Timer(config, plugins)
-
     // Handle actual timer events. The timer is the source of truth.
-    timer.on('stopping', handleStopping)
-    timer.on('stopped', handleStopped)
-    timer.on('tick', handleTick)
-    timer.on('started', handleStarted)
-
-    if (timerState === 'STOPPED') timer.start().catch((e) => console.error(e))
   })
 
   ipcMain.on('toggle', () => {
