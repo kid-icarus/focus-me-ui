@@ -51,6 +51,7 @@ const PluginList: React.FC<GeneralConfigProps> = ({
             }}
           >
             <CheckBox
+              toggle
               checked={plugin.enabled}
               onChange={setPluginEnabled(name)}
             />

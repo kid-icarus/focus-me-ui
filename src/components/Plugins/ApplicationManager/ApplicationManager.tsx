@@ -1,5 +1,5 @@
 import React, { KeyboardEventHandler } from 'react'
-import { Button, FormField, Text, TextInput } from 'grommet'
+import { Button, FormField, Heading, Paragraph, Text, TextInput } from 'grommet'
 import { PluginProps } from '../index'
 import { FormClose } from 'grommet-icons'
 
@@ -40,7 +40,14 @@ const ApplicationManager: React.FC<PluginProps> = ({
 
   return (
     <div>
-      <TextInput onKeyPress={addPluginToClose} />
+      <Heading>Application Manager</Heading>
+      <Paragraph margin={{ top: 'small', bottom: 'medium' }}>
+        Configure applications to be closed while focusing, and optionally
+        choose applications to open once the timer ends.
+      </Paragraph>
+      <FormField label="Close the following applications when timer starts:">
+        <TextInput onKeyPress={addPluginToClose} />
+      </FormField>
       {pluginConfig.close.map((x) => (
         <Button
           onClick={() => onRemoveAppClick(x)}
@@ -54,7 +61,7 @@ const ApplicationManager: React.FC<PluginProps> = ({
       ))}
       <FormField
         label="Open the following applications when timer stops:"
-        margin={{ vertical: 'large' }}
+        margin={{ top: 'large' }}
       >
         <TextInput onKeyPress={addPluginToOpen} />
       </FormField>

@@ -37,6 +37,16 @@ interface FocusConfig {
     rain: Config & {
       volume: number
     }
+    slack: Config & {
+      token: string
+      duration?: number
+      statusText?: string
+      statusEmoji?: string
+    }
+    'rescue-time': Config & {
+      apiKey: string
+      duration: number
+    }
   }
 }
 

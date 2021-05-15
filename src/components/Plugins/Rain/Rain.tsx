@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FormField, RangeInput } from 'grommet'
+import { FormField, Heading, Paragraph, RangeInput } from 'grommet'
 import { PluginProps } from '../index'
 
 const Rain: React.FC<PluginProps> = ({ config, updatePluginConfig }) => {
@@ -13,15 +13,21 @@ const Rain: React.FC<PluginProps> = ({ config, updatePluginConfig }) => {
   }
 
   return (
-    <FormField label={`Volume: ${value * 100}%`}>
-      <RangeInput
-        min={0}
-        max={1}
-        step={0.1}
-        value={value}
-        onChange={onChange}
-      />
-    </FormField>
+    <>
+      <Heading>Rain</Heading>
+      <Paragraph margin={{ top: 'small', bottom: 'medium' }}>
+        Plays the soothing sound of rain for the duration of the timer.
+      </Paragraph>
+      <FormField label={`Volume: ${value * 100}%`}>
+        <RangeInput
+          min={0}
+          max={1}
+          step={0.1}
+          value={value}
+          onChange={onChange}
+        />
+      </FormField>
+    </>
   )
 }
 
