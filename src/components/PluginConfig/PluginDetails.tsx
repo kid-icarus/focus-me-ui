@@ -44,7 +44,7 @@ const PluginDetails: React.FC<PluginProps> = ({
     : DefaultDetails
 
   return (
-    <Box gridArea="content">
+    <Box gridArea="content" pad="medium">
       <Details config={config} updatePluginConfig={updatePluginConfig} />
     </Box>
   )

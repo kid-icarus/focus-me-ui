@@ -78,10 +78,10 @@ const App = () => {
   }, [started])
 
   return (
-    <Box align="center" justify="center" height="full">
+    <Box align="center" justify="center" height="100vh">
       <Grommet themeMode={themeMode}>
         <Box align="center" justify="center">
-          <Meter type="circle" value={remaining}></Meter>
+          <Meter type="circle" value={remaining} />
           <Controls>
             <Clock
               size="xxlarge"

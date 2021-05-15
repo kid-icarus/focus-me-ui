@@ -59,13 +59,8 @@ const App: React.FC = () => {
   return (
     <Grommet>
       <HashRouter>
-        <Grid
-          fill
-          columns={['auto', 'flex']}
-          rows={['auto', 'flex']}
-          gap="small"
-        >
-          <Nav background="brand">
+        <Grid fill columns={['auto', 'flex']} rows={['auto', 'flex']}>
+          <Nav background="brand" pad={{ top: 'small' }}>
             <AnchorLink icon={<SettingsOption />} to="/general"></AnchorLink>
             <AnchorLink icon={<Action />} to="/plugins"></AnchorLink>
           </Nav>

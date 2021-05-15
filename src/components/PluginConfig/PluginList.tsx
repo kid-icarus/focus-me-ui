@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Box, CheckBox } from 'grommet'
-import { Link, useRouteMatch } from 'react-router-dom'
+import { Box, CheckBox, Heading, Text } from 'grommet'
+import { Link, useLocation, useRouteMatch } from 'react-router-dom'
 import { ChangeEvent, useCallback } from 'react'
 import styled from 'styled-components'
 
@@ -9,8 +9,9 @@ interface GeneralConfigProps {
   config: FocusConfig
 }
 
-const PluginItem = styled.div`
-  margin: 8px;
+const PluginLink = styled(Link)`
+  color: white;
+  text-decoration: none;
 `
 
 const PluginList: React.FC<GeneralConfigProps> = ({
@@ -19,6 +20,8 @@ const PluginList: React.FC<GeneralConfigProps> = ({
 }) => {
   const { plugins } = config
   const { url } = useRouteMatch()
+  const location = useLocation()
+  const activePlugin = location.pathname.split('/plugins/')[1] ?? ''
 
   const setPluginEnabled = useCallback(
     (pluginName) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,15 +33,30 @@ const PluginList: React.FC<GeneralConfigProps> = ({
   )
 
   return (
-    <Box gridArea="subnav" background="dark-3">
+    <Box gridArea="subnav" background="dark-2" height={{ min: '100vh' }}>
+      <Box pad="small">
+        <Heading level={2}>Plugins</Heading>
+      </Box>
       {Object.entries(plugins).map(([name, plugin]) => (
-        <PluginItem key={name}>
-          <CheckBox
-            label={<Link to={`${url}/${name}`}>{name}</Link>}
-            checked={plugin.enabled}
-            onChange={setPluginEnabled(name)}
-          />
-        </PluginItem>
+        <PluginLink key={name} to={`${url}/${name}`}>
+          <Box
+            key={name}
+            direction="row"
+            pad="small"
+            gap="small"
+            hoverIndicator="brand"
+            background={activePlugin === name ? 'brand' : 'none'}
+            onClick={() => {
+              // really dumb hack to get a hover indicator. it requires onclick
+            }}
+          >
+            <CheckBox
+              checked={plugin.enabled}
+              onChange={setPluginEnabled(name)}
+            />
+            <Text>{name}</Text>
+          </Box>
+        </PluginLink>
       ))}
     </Box>
   )

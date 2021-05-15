@@ -40,20 +40,22 @@ const ApplicationManager: React.FC<PluginProps> = ({
 
   return (
     <div>
-      <Text>Close the following applications when timer starts:</Text>
-      <FormField>
-        <TextInput onKeyPress={addPluginToClose} />
-      </FormField>
+      <TextInput onKeyPress={addPluginToClose} />
       {pluginConfig.close.map((x) => (
         <Button
           onClick={() => onRemoveAppClick(x)}
           key={x}
           icon={<FormClose />}
           label={x}
+          size="small"
+          margin="xsmall"
+          primary
         />
       ))}
-      <Text>Open the following applications when timer stops:</Text>
-      <FormField>
+      <FormField
+        label="Open the following applications when timer stops:"
+        margin={{ vertical: 'large' }}
+      >
         <TextInput onKeyPress={addPluginToOpen} />
       </FormField>
       {pluginConfig.open.map((x) => (
@@ -62,6 +64,9 @@ const ApplicationManager: React.FC<PluginProps> = ({
           key={x.name}
           icon={<FormClose />}
           label={x.name}
+          primary
+          size="small"
+          margin="xsmall"
         />
       ))}
     </div>
