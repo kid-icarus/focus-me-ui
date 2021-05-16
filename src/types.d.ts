@@ -5,15 +5,15 @@ interface Window {
     startTimer: () => void
     stopTimer: () => void
     receive: (x: string, y: (...x) => void) => void
+    selectApplication: () => Promise<Application>
+    getRunningApps: () => Promise<Application[]>
   }
 }
 
-interface Config {
-  enabled: boolean
-}
-
-interface ApplicationOpen {
+interface Application {
+  id?: string
   name: string
+  displayedName?: string
   bounds?: {
     x: number
     y: number
@@ -22,9 +22,13 @@ interface ApplicationOpen {
   }
 }
 
+interface Config {
+  enabled: boolean
+}
+
 interface ApplicationManagerConfig extends Config {
-  close: string[]
-  open: ApplicationOpen[]
+  close: Application[]
+  open: Application[]
 }
 
 interface FocusConfig {
@@ -50,7 +54,7 @@ interface FocusConfig {
   }
 }
 
-type TimerActionType = 'START' | 'STOPPING' | 'STOPPED' | 'TICK'
+type TimerActionType = 'START' | 'STOPPING' | 'STOPPED' | 'TICK' | 'SELECT_APP'
 
 interface TimerAction {
   type: TimerActionType

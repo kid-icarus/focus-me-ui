@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "allowJs": true
   },
-  "files": ["src/electron.ts", "src/types.d.ts"]
+  "files": ["src/electron.ts", "src/applescripts/getApplication.js", "src/types.d.ts"]
 }

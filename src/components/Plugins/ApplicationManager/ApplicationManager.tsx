@@ -1,7 +1,33 @@
-import React, { KeyboardEventHandler } from 'react'
-import { Button, FormField, Heading, Paragraph, Text, TextInput } from 'grommet'
+import React, {
+  ChangeEvent,
+  EventHandler,
+  KeyboardEventHandler,
+  useEffect,
+  useState,
+} from 'react'
+import {
+  Box,
+  Button,
+  FormField,
+  Heading,
+  Layer,
+  Paragraph,
+  TextInput,
+  TextInputProps,
+} from 'grommet'
 import { PluginProps } from '../index'
-import { FormClose } from 'grommet-icons'
+import { FormClose, Target } from 'grommet-icons'
+import ApplicationSelector, { ApplicationType } from './ApplicationSelector'
+
+interface Suggestion {
+  label: string
+  value: string
+}
+
+interface App {
+  name: string
+  displayedName: string
+}
 
 const ApplicationManager: React.FC<PluginProps> = ({
   config,
@@ -9,74 +35,45 @@ const ApplicationManager: React.FC<PluginProps> = ({
 }) => {
   const pluginConfig: ApplicationManagerConfig =
     config.plugins['application-manager']
+  const [runningApps, setRunningApps] = useState<
+    {
+      label: string
+      value: string
+    }[]
+  >([])
+  const appTypes: ApplicationType[] = ['close', 'open']
 
-  const addPluginToClose: KeyboardEventHandler<HTMLInputElement> = async (
-    e
-  ) => {
-    if (e.key === 'Enter') {
-      await updatePluginConfig('application-manager', {
-        ...pluginConfig,
-        close: [...pluginConfig.close, e.currentTarget.value],
+  useEffect(() => {
+    window.electron
+      .getRunningApps()
+      .then((apps) => {
+        console.log(apps)
+        return apps.map((x): { label: string; value: string } => ({
+          label: x.displayedName ?? x.name,
+          value: x.name,
+        }))
       })
-    }
-  }
-
-  const addPluginToOpen: KeyboardEventHandler<HTMLInputElement> = async (e) => {
-    if (e.key === 'Enter') {
-      await updatePluginConfig('application-manager', {
-        ...pluginConfig,
-        open: [...pluginConfig.open, { name: e.currentTarget.value }],
-      })
-    }
-  }
-
-  const onRemoveAppClick = async (appName: string) => {
-    const index = pluginConfig.close.indexOf(appName)
-    pluginConfig.close.splice(index, 1)
-    await updatePluginConfig('application-manager', {
-      ...pluginConfig,
-    })
-  }
+      .then(setRunningApps)
+      .catch((e) => console.log(e))
+  }, [])
 
   return (
-    <div>
+    <Box>
       <Heading>Application Manager</Heading>
       <Paragraph margin={{ top: 'small', bottom: 'medium' }}>
         Configure applications to be closed while focusing, and optionally
         choose applications to open once the timer ends.
       </Paragraph>
-      <FormField label="Close the following applications when timer starts:">
-        <TextInput onKeyPress={addPluginToClose} />
-      </FormField>
-      {pluginConfig.close.map((x) => (
-        <Button
-          onClick={() => onRemoveAppClick(x)}
-          key={x}
-          icon={<FormClose />}
-          label={x}
-          size="small"
-          margin="xsmall"
-          primary
+      {appTypes.map((type) => (
+        <ApplicationSelector
+          key={type}
+          config={config}
+          updatePluginConfig={updatePluginConfig}
+          suggestions={runningApps}
+          type={type}
         />
       ))}
-      <FormField
-        label="Open the following applications when timer stops:"
-        margin={{ top: 'large' }}
-      >
-        <TextInput onKeyPress={addPluginToOpen} />
-      </FormField>
-      {pluginConfig.open.map((x) => (
-        <Button
-          onClick={() => onRemoveAppClick(x.name)}
-          key={x.name}
-          icon={<FormClose />}
-          label={x.name}
-          primary
-          size="small"
-          margin="xsmall"
-        />
-      ))}
-    </div>
+    </Box>
   )
 }
 
