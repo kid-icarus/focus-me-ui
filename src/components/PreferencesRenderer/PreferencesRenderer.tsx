@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Switch, Link, Route, HashRouter, LinkProps } from 'react-router-dom'
-import { render } from 'react-dom'
-import { GeneralConfig, PluginConfig } from './components'
+import { GeneralConfig, PluginConfig } from '../../components'
 import { Grommet, Main, Box, Grid, Nav, Anchor, AnchorProps } from 'grommet'
 import { Action, SettingsOption } from 'grommet-icons'
 
@@ -40,7 +39,7 @@ const App: React.FC = () => {
   )
 
   const updatePluginConfig = useCallback(
-    async (pluginName: string, formValues: Config) => {
+    async (pluginName: keyof FocusConfig['plugins'], formValues: Config) => {
       const updatedConfig = {
         ...config,
         plugins: {
@@ -61,8 +60,8 @@ const App: React.FC = () => {
       <HashRouter>
         <Grid fill columns={['auto', 'flex']} rows={['auto', 'flex']}>
           <Nav background="brand" pad={{ top: 'small' }}>
-            <AnchorLink icon={<SettingsOption />} to="/general"></AnchorLink>
-            <AnchorLink icon={<Action />} to="/plugins"></AnchorLink>
+            <AnchorLink icon={<SettingsOption />} to="/general" />
+            <AnchorLink icon={<Action />} to="/plugins" />
           </Nav>
           <Box background="light-5">
             <Main>
@@ -85,4 +84,4 @@ const App: React.FC = () => {
   )
 }
 
-render(<App />, document.getElementById('root'))
+export default App

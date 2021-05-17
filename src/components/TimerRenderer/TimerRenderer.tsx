@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import { render } from 'react-dom'
 import { useEffect, useState } from 'react'
 import { Box, Button, Clock, Grommet, Meter } from 'grommet'
 import { PlayFill, StopFill } from 'grommet-icons'
@@ -104,4 +103,4 @@ const App = () => {
   )
 }
 
-render(<App />, document.getElementById('root'))
+export default App

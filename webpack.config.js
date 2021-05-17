@@ -20,26 +20,29 @@ module.exports = [
       filename: 'preload.js',
     },
   },
+  // {
+  //   mode: 'development',
+  //   entry: './src/electron.ts',
+  //   target: 'electron-main',
+  //   module: {
+  //     rules: [{
+  //       test: /\.ts$/,
+  //       include: /src/,
+  //       use: [{ loader: 'ts-loader' }]
+  //     }]
+  //   },
+  //   output: {
+  //     path: __dirname + '/dist',
+  //     filename: 'electron.js'
+  //   }
   {
-    //   mode: 'development',
-    //   entry: './src/electron.ts',
-    //   target: 'electron-main',
-    //   module: {
-    //     rules: [{
-    //       test: /\.ts$/,
-    //       include: /src/,
-    //       use: [{ loader: 'ts-loader' }]
-    //     }]
-    //   },
-    //   output: {
-    //     path: __dirname + '/dist',
-    //     filename: 'electron.js'
-    //   }
-    // }, {
     mode: 'development',
-    entry: './src/react.tsx',
+    entry: './src/renderers/Main.tsx',
     target: 'electron-renderer',
     devtool: 'source-map',
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    },
     module: {
       rules: [
         {
@@ -51,17 +54,18 @@ module.exports = [
     },
     output: {
       path: __dirname + '/dist',
-      filename: 'react.js',
+      filename: 'main.js',
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './src/index.html',
+        template: './public/index.html',
+        filename: 'index.html',
       }),
     ],
   },
   {
     mode: 'development',
-    entry: './src/preferences.tsx',
+    entry: './src/renderers/Preferences.tsx',
     target: 'electron-renderer',
     devtool: 'source-map',
     resolve: {
@@ -82,7 +86,7 @@ module.exports = [
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './src/preferences.html',
+        template: './public/preferences.html',
         filename: 'preferences.html',
       }),
     ],
