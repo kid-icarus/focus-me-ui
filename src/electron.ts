@@ -157,6 +157,17 @@ app.on('ready', () => {
       registerAccelerator: true,
       click: createPreferencesWindow,
     },
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'selectAll' },
+      ],
+    },
     { role: 'quit' },
   ])
   const appMenu = Menu.buildFromTemplate([
