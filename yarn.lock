@@ -199,10 +199,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@focus-me/focus-cli@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@focus-me/focus-cli/-/focus-cli-2.0.0.tgz#77ce6cd8a43a10f322f8e62f0797779985eaa52c"
-  integrity sha512-QEQEdjZ6GCfVm7aY9Ua6c32KI+DjksSxIq9WhPknxlrJzCEcSsDEuWDnk7hte1U/8soo/mwqJ+SB46AkPrnCeg==
+"@focus-me/focus-cli@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@focus-me/focus-cli/-/focus-cli-3.0.0.tgz#1c2207208cd75ee9afc41c18dea5a7cbcdaa5295"
+  integrity sha512-26Qi3iIy3277tf44PyodbT6E7Jz1T6pqFAVWQLkcPGnOFwB5qhBd0fqUhV6UVR0+e2qjV0eMyiJhaU0UUCYK3A==
   dependencies:
     "@types/node" "12"
     "@types/yargs" "^13.0.0"

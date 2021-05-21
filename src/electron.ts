@@ -10,11 +10,7 @@ import {
 import { Timer } from '@focus-me/focus-cli/dist/timer'
 import { loadPlugins } from '@focus-me/focus-cli/dist/util/load-plugins'
 import * as path from 'path'
-import { readFile } from 'fs/promises'
-
-const TIMERRC_PATH = path.join(process.env.HOME, '.timerrc.json')
-const readConfig = async (): Promise<FocusConfig> =>
-  (JSON.parse(await readFile(TIMERRC_PATH, 'utf8')) as unknown) as FocusConfig
+import { readConfig } from './util/config'
 
 let timer: Timer
 void (async (): Promise<void> => {

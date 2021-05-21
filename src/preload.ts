@@ -1,12 +1,7 @@
 import { ipcRenderer, contextBridge } from 'electron'
-import { readFile, writeFile } from 'fs/promises'
 import * as path from 'path'
 import { exec } from 'child_process'
-
-const TIMERRC_PATH = path.join(process.env.HOME, '.timerrc.json')
-
-const readConfig = async (): Promise<FocusConfig> =>
-  (JSON.parse(await readFile(TIMERRC_PATH, 'utf8')) as unknown) as FocusConfig
+import { readConfig, writeConfig } from './util/config'
 
 const api: Window['electron'] = {
   startTimer: () => {
@@ -16,8 +11,7 @@ const api: Window['electron'] = {
     ipcRenderer.send('stop-timer')
   },
   readConfig,
-  writeConfig: async (config: FocusConfig): Promise<void> =>
-    await writeFile(TIMERRC_PATH, JSON.stringify(config, null, 2)),
+  writeConfig,
   receive: (channel, func: (...x: unknown[]) => void) => {
     const validChannels = ['fromMain', 'timer-stopped', 'action']
     if (validChannels.includes(channel)) {

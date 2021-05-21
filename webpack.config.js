@@ -6,6 +6,9 @@ module.exports = [
     mode: 'development',
     entry: './src/preload.ts',
     target: 'electron-main',
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    },
     module: {
       rules: [
         {
