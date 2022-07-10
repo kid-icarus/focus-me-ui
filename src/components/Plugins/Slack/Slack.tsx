@@ -2,27 +2,32 @@ import React from 'react'
 import { Box, Button, FormField, Heading, Paragraph, TextInput } from 'grommet'
 import { PluginProps } from '../index'
 import { FormView, FormViewHide } from 'grommet-icons'
+import { B } from './styles'
 
 type SlackConfig = Omit<FocusConfig['plugins']['slack'], 'enabled'>
 
 const Slack: React.FC<PluginProps> = ({ config, updatePluginConfig }) => {
   const [
-    { statusEmoji, statusText, token },
+    { statusEmoji, statusText, token, client_id, client_secret, redirect_uri },
     setSlackConfig,
   ] = React.useState<SlackConfig>(config.plugins.slack)
-  const [hidden, setHidden] = React.useState(true)
-  const toggleHidden = () => {
-    setHidden((prev) => !prev)
-  }
 
   const updateSlackConfig = (partialUpdate: Partial<SlackConfig>) => {
     const update = {
       statusEmoji: partialUpdate.statusEmoji ?? statusEmoji,
       statusText: partialUpdate.statusText ?? statusText,
-      token: partialUpdate.token ?? token,
+      token,
+      client_id,
+      client_secret,
+      redirect_uri,
     }
     setSlackConfig(update)
     updatePluginConfig('slack', update).catch((e) => console.error(e))
+  }
+
+  const auth: React.MouseEventHandler = (e) => {
+    e.preventDefault()
+    window.electron.openSlackAuth()
   }
 
   return (
@@ -30,24 +35,13 @@ const Slack: React.FC<PluginProps> = ({ config, updatePluginConfig }) => {
       <Heading>Slack</Heading>
       <Paragraph margin={{ top: 'small', bottom: 'medium' }}>
         Sets Slack status as do not disturb, and sets an status message and
-        emoji.
+        emoji. Important: this requires you to set up a slack app. And requires
+        you to modify your slack configuration to oauth through the app's creds.
       </Paragraph>
-      <Box direction="row" align="center" flex="shrink">
-        <Box flex="grow">
-          <FormField label="API Token">
-            <TextInput
-              type={hidden ? 'password' : 'text'}
-              name="token"
-              value={token}
-              onChange={(e) => updateSlackConfig({ token: e.target.value })}
-            />
-          </FormField>
-        </Box>
-        <Button
-          plain
-          onClick={toggleHidden}
-          icon={hidden ? <FormView /> : <FormViewHide />}
-        />
+      <Box direction="row" justify="center">
+        <B primary onClick={auth}>
+          {!token ? 'Add To Slack' : 'Reset Token'}
+        </B>
       </Box>
       <FormField label="Status Emoji">
         <TextInput

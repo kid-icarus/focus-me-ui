@@ -10,7 +10,8 @@ import {
 import { Timer } from '@focus-me/focus-cli/dist/timer'
 import { loadPlugins } from '@focus-me/focus-cli/dist/util/load-plugins'
 import * as path from 'path'
-import { readConfig } from './util/config'
+import { readConfig, writeConfig } from './util/config'
+import got from 'got'
 
 let timer: Timer
 void (async (): Promise<void> => {
@@ -116,6 +117,10 @@ async function createWindow() {
     ipcMain.emit('stop-timer')
   })
 
+  ipcMain.on('open-slack-auth', () => {
+    void createAuthWindow()
+  })
+
   await win.loadFile('index.html')
 }
 
@@ -129,6 +134,54 @@ async function createPreferencesWindow() {
   })
 
   await win.loadFile('preferences.html')
+}
+
+const createAuthWindow = async () => {
+  const config = await readConfig()
+  const win = new BrowserWindow({
+    width: 1000,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: false,
+      enableRemoteModule: false,
+    },
+  })
+  const params = new URLSearchParams({
+    client_id: config.plugins.slack.client_id,
+    user_scope: 'users.profile:write,dnd:write',
+  })
+  const url = new URL('https://slack.com/oauth/v2/authorize')
+  url.search = params.toString()
+
+  await win.loadURL(url.toString()).catch(console.error)
+
+  const {
+    session: { webRequest },
+  } = win.webContents
+
+  const filter = {
+    urls: [`${config.plugins.slack.redirect_uri}/*`],
+  }
+
+  webRequest.onBeforeRequest(filter, ({ url }) => {
+    console.log({ url })
+    const params = new URL(url).searchParams
+    void got
+      .post('https://slack.com/api/oauth.v2.access', {
+        form: {
+          client_id: config.plugins.slack.client_id,
+          client_secret: config.plugins.slack.client_secret,
+          code: params.get('code'),
+          redirect_uri: config.plugins.slack.redirect_uri,
+        },
+      })
+      .json<{ authed_user: { access_token: string } }>()
+      .then(async (x) => {
+        config.plugins.slack.token = x.authed_user.access_token
+        await writeConfig(config)
+        win.close()
+      })
+  })
 }
 
 let tray: Tray

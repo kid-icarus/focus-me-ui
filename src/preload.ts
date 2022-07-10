@@ -36,7 +36,7 @@ const api: Window['electron'] = {
     const appName = await proc
     return JSON.parse(appName) as Application
   },
-  getRunningApps: async (): Promise<[]> => {
+  getRunningApps: async (): Promise<Application[]> => {
     const proc = new Promise<string>((res, rej) => {
       exec(
         `osascript ${path.join(
@@ -51,7 +51,10 @@ const api: Window['electron'] = {
       )
     })
     const apps = await proc
-    return JSON.parse(apps)
+    return JSON.parse(apps) as Application[]
+  },
+  openSlackAuth: () => {
+    ipcRenderer.send('open-slack-auth')
   },
 }
 

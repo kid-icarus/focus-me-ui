@@ -7,6 +7,7 @@ interface Window {
     receive: (x: string, y: (...x) => void) => void
     selectApplication: () => Promise<Application>
     getRunningApps: () => Promise<Application[]>
+    openSlackAuth: () => void
   }
 }
 
@@ -42,6 +43,9 @@ interface FocusConfig {
       volume: number
     }
     slack: Config & {
+      client_id: string
+      client_secret: string
+      redirect_uri: string
       token: string
       duration?: number
       statusText?: string
